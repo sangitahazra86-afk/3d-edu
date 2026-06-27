@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formula Hub</title>
+    <meta
+      name="description"
+      content="A simple study website to find formulas for classes 8 to 12 across boards and streams."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Study made simple</p>
+          <h1>Find formulas for every chapter from classes 8 to 12</h1>
+          <p>
+            Search formulas by class, board, stream, subject, or chapter in one place.
+          </p>
+        </div>
+      </header>
+
+      <section class="controls" aria-label="Formula filters">
+        <div class="control-group">
+          <label for="gradeFilter">Class</label>
+          <select id="gradeFilter">
+            <option value="All">All classes</option>
+            <option value="8">Class 8</option>
+            <option value="9">Class 9</option>
+            <option value="10">Class 10</option>
+            <option value="11">Class 11</option>
+            <option value="12">Class 12</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="boardFilter">Board</label>
+          <select id="boardFilter">
+            <option value="All">All boards</option>
+            <option value="CBSE">CBSE</option>
+            <option value="ICSE">ICSE</option>
+            <option value="State Board">State Board</option>
+            <option value="IB">IB</option>
+            <option value="Cambridge">Cambridge</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="streamFilter">Stream</label>
+          <select id="streamFilter">
+            <option value="All">All streams</option>
+            <option value="Science">Science</option>
+            <option value="Commerce">Commerce</option>
+            <option value="Arts">Arts</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="subjectFilter">Subject</label>
+          <select id="subjectFilter">
+            <option value="All">All subjects</option>
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Biology">Biology</option>
+            <option value="Accountancy">Accountancy</option>
+            <option value="Economics">Economics</option>
+            <option value="Business Studies">Business Studies</option>
+            <option value="Geography">Geography</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="chapterFilter">Chapter</label>
+          <select id="chapterFilter">
+            <option value="All">All chapters</option>
+          </select>
+        </div>
+
+        <div class="control-group search-box">
+          <label for="searchInput">Search</label>
+          <input id="searchInput" type="text" placeholder="Try chapter, subject, or formula" />
+        </div>
+      </section>
+
+      <section class="chapter-section" aria-label="Browse formulas by chapter">
+        <div class="chapter-section-header">
+          <h3>Chapters</h3>
+          <p>Browse formulas by textbook chapter for the current subject and class.</p>
+        </div>
+        <div id="chapterPills" class="chapter-pills"></div>
+        <div class="chapter-summary">
+          <h4 id="chapterSummaryTitle">Subject chapters</h4>
+          <div id="chapterSummaryList" class="chapter-summary-list"></div>
+        </div>
+      </section>
+
+      <section class="results" aria-live="polite">
+        <div class="results-header">
+          <h2>Available formulas</h2>
+          <span id="resultsCount">0 results</span>
+        </div>
+        <div id="formulaGrid" class="formula-grid"></div>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edu3D - Interactive Educational 3D Visualizer & Generator</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Stylesheet -->
+  <script type="module" crossorigin src="/assets/index-DpJ9zFJU.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CQPvCaWP.css">
+</head>
+<body>
+    <!-- 3D Canvas Background -->
+    <div id="canvas-container"></div>
+    
+    <!-- Loading Overlay -->
+    <div id="loader" class="loader-container">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">Initializing 3D Environment...</div>
+        </div>
+    </div>
+    
+    <!-- App Container -->
+    <div id="app" class="app-layout">
+        
+        <!-- Header & Search Bar -->
+        <header class="app-header">
+            <div class="logo">
+                <i data-lucide="orbit" class="logo-icon"></i>
+                <span class="logo-text">Edu<span class="logo-accent">3D</span></span>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" id="search-input" placeholder="Search atoms, molecules, planets, crystal lattices..." autocomplete="off">
+                    <button id="search-btn" class="btn btn-primary">Search</button>
+                </div>
+                <!-- Autocomplete Dropdown -->
+                <ul id="autocomplete-list" class="autocomplete-dropdown hidden"></ul>
+            </div>
+            
+            <div class="header-actions">
+                <button id="theme-toggle" class="icon-btn" title="Toggle Grid Theme">
+                    <i data-lucide="grid-3x3"></i>
+                </button>
+                <button id="help-btn" class="icon-btn" title="How to Control">
+                    <i data-lucide="help-circle"></i>
+                </button>
+            </div>
+        </header>
+        
+        <!-- Left Sidebar: Object Categories -->
+        <aside class="sidebar left-sidebar" id="category-sidebar">
+            <div class="sidebar-header">
+                <i data-lucide="compass"></i>
+                <h3>Library</h3>
+            </div>
+            <div class="category-list">
+                <!-- Chemistry Section -->
+                <div class="category-group">
+                    <div class="category-title" data-category="chemistry">
+                        <span>Chemistry & Elements</span>
+                        <i data-lucide="chevron-down" class="chevron-icon"></i>
+                    </div>
+                    <ul class="category-items" id="cat-chemistry">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                
+                <!-- Lattices Section -->
+                <div class="category-group">
+                    <div class="category-title" data-category="lattices">
+                        <span>Crystalline Structures</span>
+                        <i data-lucide="chevron-down" class="chevron-icon"></i>
+                    </div>
+                    <ul class="category-items" id="cat-lattices">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                
+                <!-- Space Section -->
+                <div class="category-group">
+                    <div class="category-title" data-category="astronomy">
+                        <span>Space</span>
+                        <i data-lucide="chevron-down" class="chevron-icon"></i>
+                    </div>
+                    <ul class="category-items" id="cat-astronomy">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                
+                <!-- Physics Section -->
+                <div class="category-group">
+                    <div class="category-title" data-category="physics">
+                        <span>Physics Concepts</span>
+                        <i data-lucide="chevron-down" class="chevron-icon"></i>
+                    </div>
+                    <ul class="category-items" id="cat-physics">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                
+                <!-- Mathematics Section -->
+                <div class="category-group">
+                    <div class="category-title" data-category="mathematics">
+                        <span>Geometry & Math</span>
+                        <i data-lucide="chevron-down" class="chevron-icon"></i>
+                    </div>
+                    <ul class="category-items" id="cat-mathematics">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Right Sidebar: Interactive Info and Simulation Control -->
+        <aside class="sidebar right-sidebar" id="control-sidebar">
+            <div id="no-selection-panel" class="info-panel-empty">
+                <div class="empty-state-icon">
+                    <i data-lucide="box"></i>
+                </div>
+                <h4>Select an Object</h4>
+                <p>Search in the search bar or choose an item from the library to generate its interactive 3D model.</p>
+            </div>
+            
+            <div id="selection-panel" class="info-panel hidden">
+                <div class="panel-header">
+                    <span id="obj-category" class="tag">Chemistry</span>
+                    <h2 id="obj-name">Water Molecule</h2>
+                    <div id="obj-formula" class="formula">H₂O</div>
+                </div>
+                
+                <div class="panel-body">
+                    <!-- Section: Description -->
+                    <div class="info-section">
+                        <h4>Educational Overview</h4>
+                        <p id="obj-desc">A water molecule consists of two hydrogen atoms covalently bonded to a single oxygen atom...</p>
+                    </div>
+                    
+                    <!-- Section: Crystalline Structure Details (Only visible for lattices) -->
+                    <div id="lattice-details" class="info-section hidden">
+                        <h4>Lattice Details</h4>
+                        <table class="details-table">
+                            <tr>
+                                <td>Coordination Number</td>
+                                <td id="lat-coordination">12</td>
+                            </tr>
+                            <tr>
+                                <td>Packing Efficiency</td>
+                                <td id="lat-efficiency">74%</td>
+                            </tr>
+                            <tr>
+                                <td>Atoms per Unit Cell</td>
+                                <td id="lat-atom-count">4</td>
+                            </tr>
+                            <tr>
+                                <td>Common Examples</td>
+                                <td id="lat-examples">Copper, Gold, Lead</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <!-- Section: Scientific Properties -->
+                    <div class="info-section">
+                        <h4>Properties & Stats</h4>
+                        <div id="obj-properties" class="stats-grid">
+                            <!-- Populated dynamically by JS -->
+                        </div>
+                    </div>
+                    
+                    <!-- Section: Dynamic Controls (Adjust parameters of the 3D model) -->
+                    <div class="info-section">
+                        <h4>Simulation Controls</h4>
+                        <div id="dynamic-controls-container" class="controls-list">
+                            <!-- Populated dynamically based on selected object -->
+                        </div>
+                    </div>
+                    
+                    <!-- Section: Rendering Settings -->
+                    <div class="info-section">
+                        <h4>Visual Settings</h4>
+                        <div class="visual-settings-group">
+                            <label for="material-select">Material Mode</label>
+                            <select id="material-select" class="form-control">
+                                <option value="realistic">Realistic Render</option>
+                                <option value="hologram">Hologram Overlay</option>
+                                <option value="wireframe">Wireframe Mesh</option>
+                                <option value="xray">X-Ray Glow</option>
+                            </select>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="toggle-orbits" checked>
+                                <span class="checkmark"></span>
+                                Show Orbits / Bonds
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="toggle-labels" checked>
+                                <span class="checkmark"></span>
+                                Show Labels
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="toggle-moons" checked>
+                                <span class="checkmark"></span>
+                                Show Moons
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-footer">
+                    <button id="explode-btn" class="btn btn-secondary btn-full">
+                        <i data-lucide="split"></i> Explode Model
+                    </button>
+                    <button id="reset-cam-btn" class="btn btn-outline btn-full">
+                        <i data-lucide="refresh-cw"></i> Reset Camera
+                    </button>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Bottom Action Bar -->
+        <footer class="bottom-bar">
+            <div class="controls-left">
+                <button id="play-pause-btn" class="action-btn active" title="Play/Pause Simulation">
+                    <i data-lucide="pause"></i>
+                </button>
+                <div class="speed-slider-container">
+                    <span>Speed:</span>
+                    <input type="range" id="sim-speed-slider" min="0" max="2" step="0.1" value="1">
+                    <span id="speed-val">1.0x</span>
+                </div>
+            </div>
+            
+            <div class="controls-center">
+                <div id="toast-notification" class="toast hidden">
+                    <span id="toast-message">Proton Selected: H⁺</span>
+                </div>
+            </div>
+            
+            <div class="controls-right">
+                <button id="toggle-grid-helper" class="action-btn" title="Toggle Grid Overlay">
+                    <i data-lucide="grid"></i>
+                </button>
+                <button id="toggle-auto-rotate" class="action-btn" title="Toggle Camera Auto-Rotation">
+                    <i data-lucide="rotate-3d"></i>
+                </button>
+            </div>
+        </footer>
+        
+        <!-- Help Modal -->
+        <div id="help-modal" class="modal-overlay hidden">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>3D Interaction Guide</h3>
+                    <button id="close-modal-btn" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="guide-item">
+                        <i data-lucide="mouse-pointer"></i>
+                        <div>
+                            <strong>Rotate</strong>
+                            <p>Left-click and drag anywhere on the screen to rotate the 3D object.</p>
+                        </div>
+                    </div>
+                    <div class="guide-item">
+                        <i data-lucide="move"></i>
+                        <div>
+                            <strong>Pan</strong>
+                            <p>Right-click and drag (or hold Shift + Left-click) to move the camera horizontally/vertically.</p>
+                        </div>
+                    </div>
+                    <div class="guide-item">
+                        <i data-lucide="zoom-in"></i>
+                        <div>
+                            <strong>Zoom</strong>
+                            <p>Use your mouse scroll wheel (or pinch on trackpads) to zoom in and out.</p>
+                        </div>
+                    </div>
+                    <div class="guide-item">
+                        <i data-lucide="cursor-click"></i>
+                        <div>
+                            <strong>Interact</strong>
+                            <p>Click directly on components (electrons, atoms, planets) to inspect their details in real-time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- External libraries via CDNs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Application Scripts -->
+</body>
+</html>
